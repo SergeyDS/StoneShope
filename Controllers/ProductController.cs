@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Rocky.Data;
 using Rocky.Models;
 using System;
@@ -33,6 +34,15 @@ namespace Rocky.Controllers
         //GET - UPSERT 
         public IActionResult Upsert(int? id)
         {
+
+            IEnumerable<SelectListItem> CategoryDropdown = _db.Category.Select(i => new SelectListItem
+            {
+                Text = i.Name,
+                Value = i.Id.ToString()
+            });
+
+            ViewBag.CategoryDropdown = CategoryDropdown;
+
             Product product = new Product();
             if (id == null)
             {
