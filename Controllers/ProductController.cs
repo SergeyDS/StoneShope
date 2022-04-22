@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Rocky.Data;
 using Rocky.Models;
+using Rocky.Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,27 +36,45 @@ namespace Rocky.Controllers
         public IActionResult Upsert(int? id)
         {
 
-            IEnumerable<SelectListItem> CategoryDropdown = _db.Category.Select(i => new SelectListItem
+            //IEnumerable<SelectListItem> CategoryDropdown = _db.Category.Select(i => new SelectListItem
+            //{
+            //    Text = i.Name,
+            //    Value = i.Id.ToString()
+            //});
+
+            //ViewBag.CategoryDropdown = CategoryDropdown;
+            //ViewData["CategoryDropdown"] = CategoryDropdown;
+
+
+            //Product product = new Product();
+
+            ProductVM productVM = new ProductVM()
             {
-                Text = i.Name,
-                Value = i.Id.ToString()
-            });
+                Product = new Product(),
+                CategorySelectList = _db.Category.Select(i => new SelectListItem
+                {
+                    Text = i.Name,
+                    Value = i.Id.ToString()
+                }),
+                ApplicationTypeSelectList = _db.ApplicationType.Select(i => new SelectListItem
+                {
+                    Text = i.Name,
+                    Value = i.Id.ToString()
+                })
+            };
 
-            ViewBag.CategoryDropdown = CategoryDropdown;
-
-            Product product = new Product();
             if (id == null)
             {
-                return View(product);
+                return View(productVM);
             }
             else
             {
-                product = _db.Product.Find(id);
-                if (product == null)
+                productVM.Product = _db.Product.Find(id);
+                if (productVM.Product == null)
                 {
                     return NotFound();
                 }
-                return View(product);
+                return View(productVM);
             }
             
         }
